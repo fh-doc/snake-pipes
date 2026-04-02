@@ -21,18 +21,23 @@ using namespace std;
 //
 // Clase Pipe:
 //      -Atributos:
-//          *pos_x
-//          *pos_y
+//      unsigned int
+//          *pos_x : Posición en el eje X.
+//          *pos_y : Posición en el eje Y.
 //
-//          *max_x
-//          *max_y
+//          *max_x : Borde máximo en el eje X.
+//          *max_y : Borde máximo en el eje Y.
 //
-//          *orientacion
-//          *old_orientacion
+//      ORIENTACION
+//          *orientacion : Hacia donde va la tubería.
+//          *old_orientacion : De donde venía la tubería.
 //
-//          *vivo
+//      bool
+//          *vivo : Indica si se ha acorralado la tubería.
 //
+//      vector<vector<string>>
 //          *mapa_propio : La visión personal de la tubería.
+//      vector<vector<pair<string, int>>>*
 //          *mapa_visual : Puntero al mapa que se muestra en pantalla.
 //
 //      -Constructores:
@@ -40,13 +45,16 @@ using namespace std;
 //          *Con todos los atributos.
 //
 //      -Métodos públicos:
+//      unsigned int
 //          *getPosX : Devuelve pos_x.
 //          *getPosY : Devuelve pos_y.
+//      bool
 //          *getVivo : Devuelve vivo;
-//
+//      void
 //          *actualizarEstado : 
-//              Obtiene caracter -> Mueve -> Si no mueve gira y vuelve a mover.
-//                                        └> Si mueve termina.
+//              1. Escribe caracter en mapa.
+//              2. Aleatoriamente elige girar. (1/5 de probabilidad)
+//              3. Mueve la tubería. Si no puede moverse gira y vuelve a mover.
 
 bool Pipe::posValida(unsigned int x, unsigned int y){
     bool valida = true;
@@ -157,7 +165,9 @@ void Pipe::girar(){
                     
             if(!posValida(pos_x+1, pos_y) && !posValida(pos_x-1, pos_y)){
                 no_puede = true;
-                matar();
+                if(!posValida(pos_x, pos_y+1)){
+                    matar();
+                }
             }
             else if(!posValida(pos_x+1, pos_y)){
                 girar_l = true;
@@ -182,7 +192,9 @@ void Pipe::girar(){
                     
             if(!posValida(pos_x, pos_y+1) && !posValida(pos_x, pos_y-1)){
                 no_puede = true;
-                matar();
+                if(!posValida(pos_x-1, pos_y)){
+                    matar();
+                }
             }
             else if(!posValida(pos_x, pos_y+1)){
                 girar_l = false;
@@ -207,7 +219,9 @@ void Pipe::girar(){
                     
             if(!posValida(pos_x, pos_y+1) && !posValida(pos_x, pos_y-1)){
                 no_puede = true;
-                matar();
+                if(!posValida(pos_x+1, pos_y)){
+                    matar();
+                }
             }
             else if(!posValida(pos_x, pos_y+1)){
                 girar_l = true;
@@ -232,7 +246,9 @@ void Pipe::girar(){
     
             if(!posValida(pos_x+1, pos_y) && !posValida(pos_x-1, pos_y)){
                 no_puede = true;
-                matar();
+                if(!posValida(pos_x, pos_y+1)){
+                    matar();
+                }
             }
             else if(!posValida(pos_x+1, pos_y)){
                 girar_l = false;

@@ -16,12 +16,8 @@ using namespace std;
 //Creado por Juan Fernando Luque Pérez.
 //Libre distribución con mención del autor.
 
-void alCerrar(){
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-}
 
-
-//Para debug por ChatGPT
+//SOLO PARA DEBUG cortesía de ChatGPT.
 string orientacionToString(ORIENTACION o) {
                 switch(o) {
                     case ARRIBA:    return "ARRIBA";
@@ -34,13 +30,20 @@ string orientacionToString(ORIENTACION o) {
 
 int main(){
 
+    //Desbloquea un poco te contexto de la tubería debajo del mapa.
+    bool debug_text = true;
+
     srand(time(nullptr));
 
+    //Haciendo setup del output.
     system("chcp 65001");
     SetConsoleOutputCP(CP_UTF8);
-
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-    atexit(alCerrar);
+    
+    CONSOLE_CURSOR_INFO cursor;
+    GetConsoleCursorInfo(h, &cursor);
+    cursor.bVisible = false;
+    SetConsoleCursorInfo(h, &cursor);
 
     unsigned int columnas = 20, 
                  filas = 20;
@@ -105,14 +108,17 @@ int main(){
             //Actualizar el estado de la tubería.
             tuberia.actualizarEstado();
 
-            //Hacer clear de la pantalla y monstrar mapa visual.
-            //system("CLS");
+            for(int i = 0; i < filas+2; i++){
+                cout << "#";
+            }
+            cout << endl;
 
             //Iterar cada columna.
             int y = 0;
             for(vector<pair<string, int>> &v : mapa_visual){
                 //Iterar cada fila de la columna
                 int x = 0;
+                cout << "#";
                 for(pair<string, int> &car : v){
                     //Cambiamos el color acorde con el espaciod el mapa
                     //e imprimos el caracter.
@@ -127,18 +133,27 @@ int main(){
                     x++;
                 }
                 //Terminamos la línea al terminar con una fila.
+                SetConsoleTextAttribute(h, 7);
+                cout << "#";
                 cout << endl;
                 y++;
             }
             //Esperamos un poco para claridad visual.
-            cout << "\nEste loop se ha realizado." << endl;
-            cout << "Pipe en: (" << tuberia.getPosX() << 
+
+            for(int i = 0; i < filas+2; i++){
+                cout << "#";
+            }
+            cout << endl;
+            if(debug_text){
+                cout << "\nEste loop se ha realizado." << endl;
+                cout << "Pipe en: (" << tuberia.getPosX() << 
                              "," << tuberia.getPosY() << ")" << endl;
-            cout << "¿Vivo? " << tuberia.getVivo() << endl;
+                cout << "¿Vivo? " << tuberia.getVivo() << endl;
 
-            cout << "Orientacion: " << orientacionToString(tuberia.getOrientacion()) << endl;            
-
-            Sleep(50);
+                cout << "Orientacion: " << 
+                orientacionToString(tuberia.getOrientacion()) << endl;
+            }
+            Sleep(10);
             SetConsoleCursorPosition(h, {0, 0});
         }while(tuberia.getVivo());
     }
