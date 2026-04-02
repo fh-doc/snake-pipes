@@ -1,3 +1,6 @@
+//Creado por Juan Fernando Luque Pérez.
+//Libre distribución con mención del autor.
+
 #include <cstdlib>
 #include <vector>
 #include <iostream>
@@ -10,23 +13,21 @@
 
 using namespace std; //Lo siento para cualquier senior que vomite al ver esto.
 
-//Creado por Juan Fernando Luque Pérez.
-//Libre distribución con mención del autor.
-
-
-//SOLO PARA DEBUG cortesía de ChatGPT.
+//Función cortesía de ChatGPT, incluida para un mensaje de
+//depuración.
 string orientacionToString(ORIENTACION o) {
-                switch(o) {
-                    case ARRIBA:    return "ARRIBA   ";
-                    case IZQUIERDA: return "IZQUIERDA";
-                    case DERECHA:   return "DERECHA  ";
-                    case ABAJO:     return "ABAJO    ";
-                }
+    switch(o) {
+        case ARRIBA:    return "ARRIBA   ";
+        case IZQUIERDA: return "IZQUIERDA";
+        case DERECHA:   return "DERECHA  ";
+        case ABAJO:     return "ABAJO    ";
+    }
 }
 
 int main(){
 
     //Desbloquea un poco te contexto de la tubería debajo del mapa.
+    //No funciona muy bien ahora mismo.
     bool debug_text = false;
 
     //Se randomiza la semilla de rand().
@@ -58,6 +59,8 @@ int main(){
     vector<vector<pair<string, int>>>* puntero_mapa = &mapa_visual;
 
     ORIENTACION orientacion;
+
+    //Elegimos un color aleatorio para comenzar del 1-15.
     int color = ((rand() % 15) + 1);
 
     //Loop principal de simulación. Se repite para cada tubería nueva.
@@ -66,8 +69,8 @@ int main(){
         unsigned int tuberia_x = rand() % filas + 1,
                      tuberia_y = rand() % columnas + 1;
         
-        // Escoger un color para la tubería.
-        color = ((color + 1) % 15) + 1;
+        // Se ciclan los colores del 1-15 para cada tubería.
+        color = (color % 15) + 1;
 
         //Elegir una orientación aleatoria para la tubería.
         //
@@ -99,7 +102,7 @@ int main(){
 
         //Inicializar la tubería.
         Pipe tuberia(tuberia_x, tuberia_y, filas, columnas, orientacion,
-                     puntero_mapa, (color));
+                     puntero_mapa, color);
 
         //Loop de simulación de una tubería. Termina cuando getVivo()
         //da false, es decir, cuando la tubería se acorrala y muere.
@@ -124,7 +127,6 @@ int main(){
                     
                     //Comprobamos si el espacio en el que estamos es la cabeza
                     //de la tubería.
-
                     if(x == tuberia.getPosX() && y == tuberia.getPosY()){
                         //Sí es.
                         //Imprimimos un caracter diferente con el color

@@ -1,3 +1,58 @@
+//Creado por Juan Fernando Luque Pérez.
+//Libre distribución con mención del autor.
+//(Vamos a ser sinceros, quién va a querer compartir esto.)
+//
+//Si eres gringo y no entiendes nada, espabila y aprende español
+//que la vida te va a comer ay gringuito jajajajaj.
+//
+//   ╔═╗
+//   ║ ║
+//   ╚═╝
+//
+// Clase Pipe:
+//      -Atributos:
+//      unsigned int
+//          *pos_x : Posición en el eje X de la cabeza de la tubería.
+//          *pos_y : Posición en el eje Y de la cabeza de la tubería.
+//
+//          *max_x : Borde máximo en el eje X.
+//          *max_y : Borde máximo en el eje Y.
+//
+//      ORIENTACION
+//          *orientacion     : Hacia dónde va la cabeza de la tubería.
+//          *old_orientacion : La anterior orientación de la cabeza de la
+//                             tubería.
+//
+//      bool
+//          *vivo : Indica si se ha acorralado la tubería.
+//
+//      vector<vector<string>>
+//          *mapa_propio : Mapa de visión personal de la tubería.
+//
+//      vector<vector<pair<string, int>>>*
+//          *mapa_visual : Puntero al mapa que se muestra en pantalla.
+//
+//      int
+//          *color : Valor usada para marcar el color de la casilla
+//                   que pinta la tubería.
+//
+//      -Constructores:
+//          *Sin atributos. Atributos por defecto.
+//          *Con todos los atributos.
+//
+//      -Métodos públicos:
+//      unsigned int
+//          *getPosX : Devuelve la variable pos_x.
+//          *getPosY : Devuelve la variable pos_y.
+//      bool
+//          *getVivo : Devuelve la variable vivo;
+//      void
+//          *actualizarEstado : Rutina de la tubería.
+//             Llama a la rutina de movimiento y escritura y gira si la tubería
+//             no pudo moverse (moverYPoner() retorna false). También tiene una
+//             probabilidad de (1/5) de girar aleatoriamente.
+//
+
 #include <cstdlib>
 #include <vector>
 #include <utility>
@@ -8,63 +63,24 @@
 
 using namespace std;
 
+//Función cortesía de ChatGPT, incluida para un mensaje de
+//depuración.
 string orientacionToString2(ORIENTACION o) {
-                switch(o) {
-                    case ARRIBA:    return "ARRIBA   ";
-                    case IZQUIERDA: return "IZQUIERDA";
-                    case DERECHA:   return "DERECHA  ";
-                    case ABAJO:     return "ABAJO    ";
-                }
+    switch(o) {
+        case ARRIBA:    return "ARRIBA   ";
+        case IZQUIERDA: return "IZQUIERDA";
+        case DERECHA:   return "DERECHA  ";
+        case ABAJO:     return "ABAJO    ";
+    }
 }
 
-//Creado por Juan Fernando Luque Pérez.
-//Libre distribución con mención del autor.
-//(Vamos a ser sinceros, quién va a querer compartir esto.)
+//Devuelve true  : Posición válida.
+//Devuelve false : Posición no válida.
 //
-//Si eres gringo y no entiendes nada, espabila y aprende español
-//que la vida te va a comer ay gringuito.
-//
-//   ╔═╗
-//   ║ ║
-//   ╚═╝
-//
-// Clase Pipe:
-//      -Atributos:
-//      unsigned int
-//          *pos_x : Posición en el eje X.
-//          *pos_y : Posición en el eje Y.
-//
-//          *max_x : Borde máximo en el eje X.
-//          *max_y : Borde máximo en el eje Y.
-//
-//      ORIENTACION
-//          *orientacion : Hacia donde va la tubería.
-//          *old_orientacion : De donde venía la tubería.
-//
-//      bool
-//          *vivo : Indica si se ha acorralado la tubería.
-//
-//      vector<vector<string>>
-//          *mapa_propio : La visión personal de la tubería.
-//      vector<vector<pair<string, int>>>*
-//          *mapa_visual : Puntero al mapa que se muestra en pantalla.
-//
-//      -Constructores:
-//          *Sin atributos. Atributos por defecto.
-//          *Con todos los atributos.
-//
-//      -Métodos públicos:
-//      unsigned int
-//          *getPosX : Devuelve pos_x.
-//          *getPosY : Devuelve pos_y.
-//      bool
-//          *getVivo : Devuelve vivo;
-//      void
-//          *actualizarEstado : 
-//              1. Escribe caracter en mapa.
-//              2. Aleatoriamente elige girar. (1/5 de probabilidad)
-//              3. Mueve la tubería. Si no puede moverse gira y vuelve a mover.
-
+//Devuelve un bool que indica si la posición es válida para mover o
+//girar en su dirección. Esto se decide si los valores de x e y están
+//dentro del rango entre 0 y max_x/max_y, y si la casilla que se está
+//analizando está vacia en el mapa de visión propia de la tubería.
 bool Pipe::posValida(unsigned int x, unsigned int y){
     bool valida = true;
 
@@ -77,6 +93,7 @@ bool Pipe::posValida(unsigned int x, unsigned int y){
     return valida;
 }
 
+//Llama a ponerEnMapa() y cambia el bool vivo a false.
 void Pipe::matar(){
 
     //cout << "Pipe muerto."" << endl;
@@ -85,6 +102,9 @@ void Pipe::matar(){
     vivo = false;
 }
         
+//Dependiendo de las variables orientacion y old_orientacion escribe
+//el caracter pertinente en tanto la matriz que se escribe por pantalla
+//como en la de su visión propia.
 void Pipe::ponerEnMapa(){
 
     //cout << "Poniendo en mapa." << endl;
@@ -93,9 +113,9 @@ void Pipe::ponerEnMapa(){
 
     string out;
 
-    //   ╔═╗
-    //   ║ ║
-    //   ╚═╝
+    //   ╔═╗   X=X
+    //   ║ ║   H H
+    //   ╚═╝   X=X
 
     switch(orientacion){
         case ORIENTACION::ARRIBA:
@@ -181,7 +201,11 @@ void Pipe::ponerEnMapa(){
     //cout << (*mapa_visual)[pos_y][pos_x].first << " Valor de color." << endl;
 }
     
-bool Pipe::girar(){
+//Dependiendo de qué casillas estén libres al rededor, elige
+//una dirección para girar (o ninguna si no puede) actualizando
+//orientacion. Si no puede ni girar ni pudiera seguir avanzando 
+//llama a matar().
+void Pipe::girar(){
 
     //cout << "Se supone que ahora gira." << endl;
     
@@ -297,10 +321,17 @@ bool Pipe::girar(){
             }
             break;
     }
-    return !no_puede;
+    return;
 }
-    
-bool Pipe::mover(bool girado){
+
+//Devuelve true  : Se ha movido.
+//Devuelve false : No se ha movido.
+//
+//Determina segun la orientación a qué casilla tendría que moverse la
+//tubería, llama a ponerEnMapa(), actualiza la posición de la cabeza
+//de la tubería y retorna true. Si la tubería tuviera que moverse a una posición
+//no válida, se salta la rutina y decuelve false.
+bool Pipe::moverYPoner(){
     bool movido = false;
     
     switch(orientacion){
@@ -341,9 +372,7 @@ bool Pipe::mover(bool girado){
             break;
     }
 
-    //if(movido && !girado){
     old_orientacion = orientacion;
-    //}
 
     return movido;
 }
@@ -379,53 +408,44 @@ Pipe::Pipe(unsigned int pos_x, unsigned int pos_y,
     this->color = color;
 }
 
+//Devuelve pos_x.
 unsigned int Pipe::getPosX(){
     return pos_x;
 }
 
+//Devuelve pos_y.
 unsigned int Pipe::getPosY(){
     return pos_y;
 }
 
+//Devuelve vivo.
 bool Pipe::getVivo(){
     return vivo;
 }
 
+//Devuelve la orientación. Para texto de depuración.
 ORIENTACION Pipe::getOrientacion(){
     return orientacion;
 }
 
-//Rutina de juego.
-//Se devuelve por referencia el caracter apropiado para poner en el
-//mapa.
-//
-//Pone en el mapa -> Mueve -> Si no mueve gira y vuelve a mover.
-//                         └> Si mueve termina.
+//Rutina de simulación.
+//Llama a la rutina de movimiento y escritura y gira si la tubería
+//no pudo moverse (moverYPoner() retorna false). También tiene una
+//probabilidad de (1/5) de girar aleatoriamente.
 void Pipe::actualizarEstado(){
 
     //cout << "\nActualizando estado." << endl;
 
-    bool movido, girado = false;
+    bool movido;
 
     if(rand() % 5 == 0){
-        girado = girar();
+        girar();
     }
 
-    //int contador = 0;
     do{
-
-        //cout << "Contador: " << contador << endl;
-
-        movido = mover(girado);
+        movido = moverYPoner();
         if(!movido){
-            girado = girar();
+            girar();
         }
-
-        //if(contador < 15){
-        //    contador++;
-        //}
-        //else{
-        //    break;
-        //}
     }while(!movido && vivo);
 }
