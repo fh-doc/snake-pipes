@@ -20,18 +20,17 @@ using namespace std;
 //SOLO PARA DEBUG cortesía de ChatGPT.
 string orientacionToString(ORIENTACION o) {
                 switch(o) {
-                    case ARRIBA:    return "ARRIBA";
+                    case ARRIBA:    return "ARRIBA   ";
                     case IZQUIERDA: return "IZQUIERDA";
-                    case DERECHA:   return "DERECHA";
-                    case ABAJO:     return "ABAJO";
-                    default:        return "DESCONOCIDO";
+                    case DERECHA:   return "DERECHA  ";
+                    case ABAJO:     return "ABAJO    ";
                 }
 }
 
 int main(){
 
     //Desbloquea un poco te contexto de la tubería debajo del mapa.
-    bool debug_text = true;
+    bool debug_text = false;
 
     srand(time(nullptr));
 
