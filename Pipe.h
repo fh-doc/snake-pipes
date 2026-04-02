@@ -58,7 +58,8 @@ class Pipe{
 
         unsigned int pos_x = 0, pos_y = 0;
         unsigned int max_x = 10, max_y = 10;
-        ORIENTACION orientacion = ORIENTACION::DERECHA, old_orientacion;
+        ORIENTACION orientacion = ORIENTACION::DERECHA;
+        ORIENTACION old_orientacion = ORIENTACION::DERECHA;
 
         bool vivo = true;
 
@@ -75,9 +76,9 @@ class Pipe{
         
         void ponerEnMapa();
     
-        void girar();
+        bool girar();
     
-        bool mover();
+        bool mover(bool girado);
 
     public:
 

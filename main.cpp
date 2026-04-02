@@ -45,7 +45,7 @@ int main(){
 
     //Dimensiones del mapa.
     unsigned int columnas = 20, 
-                 filas = 20;
+                 filas = 30;
 
     //Creamos un mapa que es un vector (de vector (de par(de string e int.)))
     //El mapa es de dimensiones filas x columnas.
@@ -169,7 +169,7 @@ int main(){
 
             //Esperamos un poco para claridad visual y devolvemos el cursor
             //al inicio.
-            Sleep(10);
+            //Sleep(5);
             SetConsoleCursorPosition(h, {0, 0});
         }while(tuberia.getVivo());
     }

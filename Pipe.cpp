@@ -8,6 +8,15 @@
 
 using namespace std;
 
+string orientacionToString2(ORIENTACION o) {
+                switch(o) {
+                    case ARRIBA:    return "ARRIBA   ";
+                    case IZQUIERDA: return "IZQUIERDA";
+                    case DERECHA:   return "DERECHA  ";
+                    case ABAJO:     return "ABAJO    ";
+                }
+}
+
 //Creado por Juan Fernando Luque Pérez.
 //Libre distribución con mención del autor.
 //(Vamos a ser sinceros, quién va a querer compartir esto.)
@@ -70,29 +79,39 @@ bool Pipe::posValida(unsigned int x, unsigned int y){
 
 void Pipe::matar(){
 
-    //cout << "Pipe muerto." << endl;
+    //cout << "Pipe muerto."" << endl;
 
+    ponerEnMapa();
     vivo = false;
 }
         
 void Pipe::ponerEnMapa(){
 
     //cout << "Poniendo en mapa." << endl;
+    //cout << "Orientacion: " << orientacionToString2(orientacion) << endl;
+    //cout << "Old Orientacion: " << orientacionToString2(old_orientacion) << endl;
 
     string out;
+
+    //   ╔═╗
+    //   ║ ║
+    //   ╚═╝
 
     switch(orientacion){
         case ORIENTACION::ARRIBA:
                     
             switch(old_orientacion){
                 case ORIENTACION::IZQUIERDA:
-                    out = "X";
+                    //out = "X";
+                    out = "╚";
                     break;
                 case ORIENTACION::DERECHA:
-                    out = "X";
+                    //out = "X";
+                    out = "╝";
                     break;
-                case ORIENTACION::ABAJO:
-                    out = "H";
+                case ORIENTACION::ARRIBA:
+                    //out = "H";
+                    out = "║";
                     break;
             }
             break;    
@@ -101,13 +120,16 @@ void Pipe::ponerEnMapa(){
     
             switch(old_orientacion){
                 case ORIENTACION::ARRIBA:
-                    out = "X";
+                    //out = "X";
+                    out = "╗";
                     break;
-                case ORIENTACION::DERECHA:
-                    out = "=";
+                case ORIENTACION::IZQUIERDA:
+                    //out = "=";
+                    out = "═";
                     break;
                 case ORIENTACION::ABAJO:
-                    out = "X";
+                    //out = "X";
+                    out = "╝";
                     break;
             }
             break;
@@ -116,13 +138,16 @@ void Pipe::ponerEnMapa(){
     
             switch(old_orientacion){
                 case ORIENTACION::ARRIBA:
-                    out = "X";
+                    //out = "X";
+                    out = "╔";
                     break;
-                case ORIENTACION::IZQUIERDA:
-                    out = "=";
+                case ORIENTACION::DERECHA:
+                    //out = "=";
+                    out = "═";
                     break;
                 case ORIENTACION::ABAJO:
-                    out = "X";
+                    //out = "X";
+                    out = "╚";
                     break;
             }
             break;
@@ -130,30 +155,33 @@ void Pipe::ponerEnMapa(){
         case ORIENTACION::ABAJO:
     
             switch(old_orientacion){
-                case ORIENTACION::ARRIBA:
-                    out = "H";
+                case ORIENTACION::ABAJO:
+                    //out = "H";
+                    out = "║";
                     break;
                 case ORIENTACION::IZQUIERDA:
-                    out = "X";
+                    //out = "X";
+                    out = "╔";
                     break;
                 case ORIENTACION::DERECHA:
-                    out = "X";
+                    //out = "X";
+                    out = "╗";
                     break;
             }
             break;
     }
     
-    //cout << "Cacarcter " << out << "seleccionado." << endl;
+    //cout << "Cacarcter: " << out << " seleccionado." << endl;
 
-    mapa_propio[pos_y][pos_x] = "x";
-    (*mapa_visual)[pos_y][pos_x].first = "x";
+    mapa_propio[pos_y][pos_x] = out;
+    (*mapa_visual)[pos_y][pos_x].first = out;
     (*mapa_visual)[pos_y][pos_x].second = color;
 
     //cout << (*mapa_visual)[pos_y][pos_x].first << " Insertado en el mapa." << endl;
     //cout << (*mapa_visual)[pos_y][pos_x].first << " Valor de color." << endl;
 }
     
-void Pipe::girar(){
+bool Pipe::girar(){
 
     //cout << "Se supone que ahora gira." << endl;
     
@@ -178,11 +206,11 @@ void Pipe::girar(){
     
             if(!no_puede){
                 if(girar_l){
-                    old_orientacion = orientacion;
+                    old_orientacion = ORIENTACION::ARRIBA;
                     orientacion = ORIENTACION::IZQUIERDA;
                 }
                 else{
-                    old_orientacion = orientacion;
+                    old_orientacion = ORIENTACION::ARRIBA;
                     orientacion = ORIENTACION::DERECHA;
                 }
             }
@@ -205,11 +233,11 @@ void Pipe::girar(){
     
             if(!no_puede){
                 if(girar_l){
-                    old_orientacion = orientacion;
+                    old_orientacion = ORIENTACION::IZQUIERDA;
                     orientacion = ORIENTACION::ABAJO;
                 }
                 else{
-                    old_orientacion = orientacion;
+                    old_orientacion = ORIENTACION::IZQUIERDA;
                     orientacion = ORIENTACION::ARRIBA;
                 }
             }
@@ -232,11 +260,11 @@ void Pipe::girar(){
     
             if(!no_puede){
                 if(girar_l){
-                    old_orientacion = orientacion;
+                    old_orientacion = ORIENTACION::DERECHA;
                     orientacion = ORIENTACION::ARRIBA;
                 }
                 else{
-                    old_orientacion = orientacion;
+                    old_orientacion = ORIENTACION::DERECHA;
                     orientacion = ORIENTACION::ABAJO;
                 }
             }
@@ -259,7 +287,7 @@ void Pipe::girar(){
 
             if(!no_puede){
                 if(girar_l){
-                    old_orientacion = orientacion;
+                    old_orientacion = ORIENTACION::ABAJO;
                     orientacion = ORIENTACION::DERECHA;
                 }
                 else{
@@ -269,16 +297,17 @@ void Pipe::girar(){
             }
             break;
     }
-    return;
+    return !no_puede;
 }
     
-bool Pipe::mover(){
+bool Pipe::mover(bool girado){
     bool movido = false;
     
     switch(orientacion){
         case ORIENTACION::ARRIBA:
     
             if(posValida(pos_x, pos_y-1)){
+                ponerEnMapa();
                 pos_y--;
                 movido = true;
             }
@@ -287,6 +316,7 @@ bool Pipe::mover(){
         case ORIENTACION::IZQUIERDA:
     
             if(posValida(pos_x-1, pos_y)){
+                ponerEnMapa();
                 pos_x--;
                 movido = true;
             }
@@ -295,6 +325,7 @@ bool Pipe::mover(){
         case ORIENTACION::DERECHA:
     
             if(posValida(pos_x+1, pos_y)){
+                ponerEnMapa();
                 pos_x++;
                 movido = true;
             }
@@ -303,19 +334,17 @@ bool Pipe::mover(){
         case ORIENTACION::ABAJO:
     
             if(posValida(pos_x, pos_y+1)){
+                ponerEnMapa();
                 pos_y++;
                 movido = true;
             }
             break;
     }
-    
-    if(movido){
 
-        //cout << "Se supone que se ha movido." << endl;
+    //if(movido && !girado){
+    old_orientacion = orientacion;
+    //}
 
-        old_orientacion = orientacion;
-    }
-    
     return movido;
 }
 
@@ -376,28 +405,27 @@ void Pipe::actualizarEstado(){
 
     //cout << "\nActualizando estado." << endl;
 
-    bool movido;
-    ponerEnMapa();
+    bool movido, girado = false;
 
     if(rand() % 5 == 0){
-        girar();
+        girado = girar();
     }
 
-    int contador = 0;
+    //int contador = 0;
     do{
 
         //cout << "Contador: " << contador << endl;
 
-        movido = mover();
+        movido = mover(girado);
         if(!movido){
-            girar();
+            girado = girar();
         }
 
-        if(contador < 15){
-            contador++;
-        }
-        else{
-            break;
-        }
+        //if(contador < 15){
+        //    contador++;
+        //}
+        //else{
+        //    break;
+        //}
     }while(!movido && vivo);
 }
