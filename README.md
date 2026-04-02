@@ -4,10 +4,12 @@ Este proyecto está hecho con ligera asistencia de IA pero completamente diseña
 que detallo en main.cpp que me daba pereza implementar por simple y mundano).
 
 Para compilar basta con hacer:
-[g++ main.cpp Pipe.cpp -o Pipes.exe]
+[g++ (-O2) main.cpp Pipe.cpp -o Pipes.exe]
 dentro de la carpeta donde extraerás los archivos.
 
 Está diseñado en y para windows, con las dependencias: cstdlib, vector, iostream, utility, windows.h y ctime.
+
+Los comentarios aún están en progreso.
 
 -------------------------
 Cosas que editar a gusto:
@@ -16,7 +18,6 @@ Cosas que editar a gusto:
  Las tuberías funcionarán independientemente del tamaño o forma de la matriz de mapa.
 
 *En main.cpp línea 30, la variable booleana debug_text puede activarse si se desea ver un poco de información sobre
- la tubería en movimiento.
+ la tubería en movimiento. Esto puede provocar unerror gráfico en el momento.
 
-*En main.cpp línea 172, aunque sea poco elegante, el valor que hay en la función Sleep() se puede editar directamente
- para cambiar la velocidad de la simulación. Por defecto son 10 milisegundos.
+*En main.cpp línea 172, hay comentado una función Sleep() que se puede descomentar y usar a gusto.
