@@ -8,10 +8,7 @@
 #include "Pipe.h"
 #include "Orientacion.h"
 
-using namespace std;
-
-//cout << "Hasta aquí bien." << endl;
-//cin >> p;
+using namespace std; //Lo siento para cualquier senior que vomite al ver esto.
 
 //Creado por Juan Fernando Luque Pérez.
 //Libre distribución con mención del autor.
@@ -32,6 +29,7 @@ int main(){
     //Desbloquea un poco te contexto de la tubería debajo del mapa.
     bool debug_text = false;
 
+    //Se randomiza la semilla de rand().
     srand(time(nullptr));
 
     //Haciendo setup del output.
@@ -39,15 +37,18 @@ int main(){
     SetConsoleOutputCP(CP_UTF8);
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
     
+    //Hacer el cursor invisible.
     CONSOLE_CURSOR_INFO cursor;
     GetConsoleCursorInfo(h, &cursor);
     cursor.bVisible = false;
     SetConsoleCursorInfo(h, &cursor);
 
+    //Dimensiones del mapa.
     unsigned int columnas = 20, 
                  filas = 20;
 
     //Creamos un mapa que es un vector (de vector (de par(de string e int.)))
+    //El mapa es de dimensiones filas x columnas.
     //
     //Con esto básicamente simulamos una matriz de mapa que para cada espacio
     //del mapa guarda un caracter, vacio o de tubería, y un valor que usaremos
@@ -107,6 +108,7 @@ int main(){
             //Actualizar el estado de la tubería.
             tuberia.actualizarEstado();
 
+            //Hacer una filla que delimita el mapa por arriba.
             for(int i = 0; i < filas+2; i++){
                 cout << "#";
             }
@@ -119,30 +121,42 @@ int main(){
                 int x = 0;
                 cout << "#";
                 for(pair<string, int> &car : v){
-                    //Cambiamos el color acorde con el espaciod el mapa
-                    //e imprimos el caracter.
+                    
+                    //Comprobamos si el espacio en el que estamos es la cabeza
+                    //de la tubería.
+
                     if(x == tuberia.getPosX() && y == tuberia.getPosY()){
+                        //Sí es.
+                        //Imprimimos un caracter diferente con el color
+                        //de la tubería actual.
                         SetConsoleTextAttribute(h, color);
                         cout << "o";
                     }
                     else{
+                        //No es.
+                        //Cambiamos el color acorde con el espacio del mapa
+                        //e imprimos el caracter.
                         SetConsoleTextAttribute(h, car.second);
                         cout << car.first;
                     }
                     x++;
                 }
-                //Terminamos la línea al terminar con una fila.
+                //Cambiamos el color, ponemos un caracter delimitador y
+                //terminamos la línea al terminar con la fila.
                 SetConsoleTextAttribute(h, 7);
                 cout << "#";
                 cout << endl;
                 y++;
             }
-            //Esperamos un poco para claridad visual.
 
+            //Hacer una filla que delimita el mapa por abajo.
             for(int i = 0; i < filas+2; i++){
                 cout << "#";
             }
+
             cout << endl;
+
+            //Texto de depuración curioso.
             if(debug_text){
                 cout << "\nEste loop se ha realizado." << endl;
                 cout << "Pipe en: (" << tuberia.getPosX() << 
@@ -152,6 +166,9 @@ int main(){
                 cout << "Orientacion: " << 
                 orientacionToString(tuberia.getOrientacion()) << endl;
             }
+
+            //Esperamos un poco para claridad visual y devolvemos el cursor
+            //al inicio.
             Sleep(10);
             SetConsoleCursorPosition(h, {0, 0});
         }while(tuberia.getVivo());
