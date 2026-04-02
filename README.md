@@ -1,4 +1,4 @@
-Realizado por Juan Fernando Luque Pérez.
+Realizado por fh-doc, JF.
 
 Este proyecto está hecho con ligera asistencia de IA pero completamente diseñado y escrito por mi (menos una función de debugging
 que detallo en main.cpp que me daba pereza implementar por simple y mundano).
