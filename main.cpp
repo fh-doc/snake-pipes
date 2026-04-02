@@ -66,8 +66,8 @@ int main(){
     //Loop principal de simulación. Se repite para cada tubería nueva.
     while(true){
         //Elegir la casilla de salida.
-        unsigned int tuberia_x = rand() % filas + 1,
-                     tuberia_y = rand() % columnas + 1;
+        unsigned int tuberia_x = rand() % filas,
+                     tuberia_y = rand() % columnas;
         
         // Se ciclan los colores del 1-15 para cada tubería.
         color = (color % 15) + 1;

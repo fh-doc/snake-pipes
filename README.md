@@ -14,10 +14,10 @@ Los comentarios aún están en progreso.
 -------------------------
 Cosas que editar a gusto:
 -------------------------
-*En main.cpp líneas 47 y 48, se puede redimensionar la matriz de mapa a gusto con las variables columnas y filas.
+*En main.cpp líneas 48 y 49, se puede redimensionar la matriz de mapa a gusto con las variables columnas y filas.
  Las tuberías funcionarán independientemente del tamaño o forma de la matriz de mapa.
 
-*En main.cpp línea 30, la variable booleana debug_text puede activarse si se desea ver un poco de información sobre
+*En main.cpp línea 31, la variable booleana debug_text puede activarse si se desea ver un poco de información sobre
  la tubería en movimiento. Esto puede provocar unerror gráfico en el momento.
 
-*En main.cpp línea 172, hay comentado una función Sleep() que se puede descomentar y usar a gusto.
+*En main.cpp línea 174, hay comentado una función Sleep() que se puede descomentar y usar a gusto.
