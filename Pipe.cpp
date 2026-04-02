@@ -198,7 +198,7 @@ void Pipe::ponerEnMapa(){
     (*mapa_visual)[pos_y][pos_x].second = color;
 
     //cout << (*mapa_visual)[pos_y][pos_x].first << " Insertado en el mapa." << endl;
-    //cout << (*mapa_visual)[pos_y][pos_x].first << " Valor de color." << endl;
+    //cout << (*mapa_visual)[pos_y][pos_x].second << " Valor de color." << endl;
 }
     
 //Dependiendo de qué casillas estén libres al rededor, elige
