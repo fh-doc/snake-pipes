@@ -7,6 +7,7 @@
 #include <utility>
 #include <windows.h>
 #include <ctime>
+#include <limits>
 
 #include "Pipe.h"
 #include "Orientacion.h"
@@ -24,7 +25,27 @@ string orientacionToString(ORIENTACION o) {
     }
 }
 
+//Muestra un mensaje string por pantalla y lee el valor pasado por
+//el usuario.
+template <typename T>
+void pedirVariable(string mensaje, T& var){ 
+    cout << mensaje << endl;
+    cin >> var;
+
+    if(cin.fail()){
+        cin.clear();           
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    return;
+}
+
 int main(){
+
+    //Haciendo setup del output.
+    system("chcp 65001");
+    SetConsoleOutputCP(CP_UTF8);
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 
     //Desbloquea un poco te contexto de la tubería debajo del mapa.
     //No funciona muy bien ahora mismo.
@@ -33,20 +54,76 @@ int main(){
     //Se randomiza la semilla de rand().
     srand(time(nullptr));
 
-    //Haciendo setup del output.
-    system("chcp 65001");
-    SetConsoleOutputCP(CP_UTF8);
-    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-    
-    //Hacer el cursor invisible.
-    CONSOLE_CURSOR_INFO cursor;
-    GetConsoleCursorInfo(h, &cursor);
-    cursor.bVisible = false;
-    SetConsoleCursorInfo(h, &cursor);
+    system("CLS");
+    CONSOLE_SCREEN_BUFFER_INFO buffer_info;
+    DWORD escrito;
+
+    //Cuansas veces se ejecuta actualizarEstado() en cada ciclo.
+    unsigned int actualizaciones_en_ciclo;
+
+    bool criterio;
+    do{
+        pedirVariable("Introduzca el número de refrescos por ciclo (1-10): ", 
+                                                   actualizaciones_en_ciclo);
+        criterio = (1 <= actualizaciones_en_ciclo) &&
+                   (actualizaciones_en_ciclo <= 10);
+
+        if(!criterio){
+            SetConsoleCursorPosition(h, {0, 1});
+            for(int i = 0; i < 80; i++){
+                cout << ' ';
+            }
+            SetConsoleCursorPosition(h, {0, 0});
+        }
+    }while(!criterio);
+
+    //El tiempo en milisegundos que pasa entre ciclos.
+    unsigned int ms_dormir;
+    do{
+        pedirVariable("Introduzca los milisegundos entre ciclo (0-10000): ",
+                                                                 ms_dormir);
+        criterio = (0 <= ms_dormir) && (ms_dormir <= 10000);
+
+        if(!criterio){
+            SetConsoleCursorPosition(h, {0, 3});
+            for(int i = 0; i < 80; i++){
+                cout << ' ';
+            }
+            SetConsoleCursorPosition(h, {0, 2});
+        }
+    }while(!criterio);
 
     //Dimensiones del mapa.
-    unsigned int columnas = 20, 
-                 filas = 30;
+    unsigned int columnas, 
+                 filas;
+
+    do{
+        pedirVariable("Introduzca el número de filas del mapa (5-100): ",
+                                                                  filas);
+        criterio = (5 <= filas) && (filas <= 100);
+
+        if(!criterio){
+            SetConsoleCursorPosition(h, {0, 5});
+            for(int i = 0; i < 80; i++){
+                cout << ' ';
+            }
+            SetConsoleCursorPosition(h, {0, 4});
+        }
+    }while(!criterio);
+
+    do{
+        pedirVariable("Introduzca el número de columnas del mapa (5-100): ",
+                                                                  columnas);
+        criterio = (5 <= columnas) && (columnas <= 100);
+
+        if(!criterio){
+            SetConsoleCursorPosition(h, {0, 7});
+            for(int i = 0; i < 80; i++){
+                cout << ' ';
+            }
+            SetConsoleCursorPosition(h, {0, 6});
+        }
+    }while(!criterio);
 
     //Creamos un mapa que es un vector (de vector (de par(de string e int.)))
     //El mapa es de dimensiones filas x columnas.
@@ -63,6 +140,13 @@ int main(){
     //Elegimos un color aleatorio para comenzar del 1-15.
     int color = ((rand() % 15) + 1);
 
+    //Hacer el cursor invisible.
+    CONSOLE_CURSOR_INFO cursor;
+    GetConsoleCursorInfo(h, &cursor);
+    cursor.bVisible = false;
+    SetConsoleCursorInfo(h, &cursor);
+
+    system("CLS");
     //Loop principal de simulación. Se repite para cada tubería nueva.
     while(true){
         //Elegir la casilla de salida.
@@ -71,11 +155,11 @@ int main(){
         
         // Se ciclan los colores del 1-15 para cada tubería.
         color = (color % 15) + 1;
-
+                     
         //Elegir una orientación aleatoria para la tubería.
         //
-        //Implementación alternativa de ChatGPT que no voy a implementar porque la
-        //ha hecho ChatGPT y no yo pero aún así me parece interesante
+        //Implementación alternativa de ChatGPT que no voy a implementar porque
+        //lo ha hecho ChatGPT y no yo pero aún así me parece interesante
         //conservarla para pensar en ella en el futuro.
         //------------------------------------------------------
         //ORIENTACION orientaciones[4]= {(las orientaciones)}:
@@ -106,10 +190,11 @@ int main(){
 
         //Loop de simulación de una tubería. Termina cuando getVivo()
         //da false, es decir, cuando la tubería se acorrala y muere.
-        system("CLS");
         do{
             //Actualizar el estado de la tubería.
-            tuberia.actualizarEstado();
+            for(unsigned int i = 0; i < actualizaciones_en_ciclo; i++){
+                tuberia.actualizarEstado();
+            }
 
             //Hacer una filla que delimita el mapa por arriba.
             for(int i = 0; i < filas+2; i++){
@@ -171,7 +256,7 @@ int main(){
 
             //Esperamos un poco para claridad visual y devolvemos el cursor
             //al inicio.
-            //Sleep(5);
+            Sleep(ms_dormir);
             SetConsoleCursorPosition(h, {0, 0});
         }while(tuberia.getVivo());
     }
