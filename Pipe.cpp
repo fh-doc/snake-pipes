@@ -217,7 +217,7 @@ void Pipe::girar(){
                     
             if(!posValida(pos_x+1, pos_y) && !posValida(pos_x-1, pos_y)){
                 no_puede = true;
-                if(!posValida(pos_x, pos_y+1)){
+                if(!posValida(pos_x, pos_y-1)){
                     matar();
                 }
             }
